@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="cordova-plugin-openfile"
+        version="1.0.0">
+
+    <name>openfile</name>
+
+    <engines>
+        <engine name="cordova" version=">=3.4.0"/>
+    </engines>
+
+    <asset src="www/Openfile.js" target="js/Openfile.js"/>
+
+    <js-module src="www/Openfile.js" name="Openfile">
+     <clobbers target="openfile" />
+    </js-module>
+
+    <platform name="android">
+        <framework src="com.android.support:support-v4:+" />
+
+		<config-file target="res/xml/config.xml" parent="/*">
+			<feature name="OpenFile">
+				<param name="android-package" value="de.mopsdom.openfile.OpenFile"/>
+			</feature>
+		</config-file>
+
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <provider
+                android:name="de.mopsdom.openfile.OpenfileProvider"
+                android:authorities="de.mopsdom.openfile.provider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+                <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/openfile_provider_paths"/>
+            </provider>
+        </config-file>
+
+        <source-file src="src/android/OpenFile.java" target-dir="src/de/mopsdom/openfile"/>
+        <source-file src="src/android/OpenfileProvider.java" target-dir="src/de/mopsdom/openfile"/>
+        <source-file src="src/android/openfile_provider_paths.xml" target-dir="res/xml"/>
+    </platform>
+</plugin>

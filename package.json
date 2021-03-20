@@ -1,0 +1,23 @@
+{
+  "name": "cordova-plugin-openfile",
+  "version": "1.0.0",
+  "description": "Opens a file",
+  "cordova": {
+    "id": "cordova-plugin-openfile",
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.4.0"
+    }
+  ],
+  "author": "",
+  "license": "ISC"
+}
