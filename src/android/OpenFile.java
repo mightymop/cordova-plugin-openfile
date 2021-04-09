@@ -29,13 +29,14 @@ public class OpenFile extends CordovaPlugin {
         File ffile = new File(file);
 
         Uri uri = null;
+		String applicationId = (String) org.apache.cordova.BuildHelper.getBuildConfigValue(cordova.getActivity(), "APPLICATION_ID");
         try {
-            uri = OpenfileProvider.getUriForFile(context, "de.mopsdom.openfile.provider", ffile);
+            uri = OpenfileProvider.getUriForFile(context, applicationId+".openfile.provider", ffile);
         }
         catch (Exception e)
         {
             try {
-                uri = OpenfileProvider.getUriForFile(context, "de.mopsdom.openfile.provider", new File(context.getFilesDir(),file));
+                uri = OpenfileProvider.getUriForFile(context, applicationId+".openfile.provider", new File(context.getFilesDir(),file));
             }
             catch (Exception e1)
             {

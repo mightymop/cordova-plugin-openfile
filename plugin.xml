@@ -27,7 +27,7 @@
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
             <provider
                 android:name="de.mopsdom.openfile.OpenfileProvider"
-                android:authorities="de.mopsdom.openfile.provider"
+                android:authorities="${applicationId}.openfile.provider"
                 android:exported="false"
                 android:grantUriPermissions="true">
                 <meta-data
