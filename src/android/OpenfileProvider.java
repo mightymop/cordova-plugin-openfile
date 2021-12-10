@@ -20,14 +20,21 @@ public class OpenfileProvider extends FileProvider {
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
 
         File f;
-        if ((f=new File(getContext().getCacheDir()+uri.getPath().replace("/"+CACHENAME,""))).exists())
+        if ((f = new File(getContext().getFilesDir()+uri.getPath())).exists())
         {
             Log.d(getContext().getString(R.string.app_name),"DELETE FILE FROM PROVIDER URI="+uri.toString()+" FILE="+f.getAbsolutePath());
             f.delete();
             return 1;
         }
         else
-        if ((f = new File(getContext().getCacheDir()+uri.getPath())).exists())
+        if ((f = new File(getContext().getExternalStorageDirectory()+uri.getPath())).exists())
+        {
+            Log.d(getContext().getString(R.string.app_name),"DELETE FILE FROM PROVIDER URI="+uri.toString()+" FILE="+f.getAbsolutePath());
+            f.delete();
+            return 1;
+        }
+        else
+        if ((f = new File(getContext().getExternalFilesDir(null)+uri.getPath())).exists())
         {
             Log.d(getContext().getString(R.string.app_name),"DELETE FILE FROM PROVIDER URI="+uri.toString()+" FILE="+f.getAbsolutePath());
             f.delete();
@@ -58,10 +65,19 @@ public class OpenfileProvider extends FileProvider {
             fname = new File(getContext().getExternalFilesDir(null),uristr);
         }
         else
-        if ((uristr=uri.getPath()).contains("/"+CACHENAME)) {
-            uristr = uristr.replace("/"+CACHENAME,"");
-            fname = new File(getContext().getCacheDir()+uristr);
-            Log.d(getContext().getString(R.string.app_name),"OPEN FILE FROM PROVIDER URI="+uri.toString()+" FILE="+f.getAbsolutePath());
+        if (uristr.contains(PROVIDER_URI+".openfile.provider/internal/")) {
+            uristr = uristr.replace(PROVIDER_URI+".openfile.provider/internal/", "");
+            fname = new File(getContext().getFilesDir(),"files/"+uristr);
+        }
+        else
+        if (uristr.contains(PROVIDER_URI+".openfile.provider/external/")) {
+            uristr = uristr.replace(PROVIDER_URI+".openfile.provider/external/", "");
+            fname = new File(Environment.getExternalStorageDirectory(),uristr);
+        }
+        else
+        if (uristr.contains(PROVIDER_URI+".openfile.provider/external2/")) {
+            uristr = uristr.replace(PROVIDER_URI+".openfile.provider/external2/", "");
+            fname = new File(getContext().getExternalFilesDir(null),uristr);
         }
 
         if (fname==null)
