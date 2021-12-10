@@ -5,6 +5,10 @@ var openfile = {
     open: function(filename, cb)
     {
         exec(cb, cb, 'OpenFile', 'open', [filename]);
+    },
+    getUriForFile: function(filename, cb)
+    {
+        exec(cb, cb, 'OpenFile', 'getUriForFile', [filename]);
     }
 };
 
