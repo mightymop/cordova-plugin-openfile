@@ -4,39 +4,40 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
-
 public class OpenfileProvider extends FileProvider {
-    public final static String PROVIDER_URI = "content://"+BuildConfig.APPLICATION_ID;
-    public final static String AUTHORITY = BuildConfig.APPLICATION_ID;
-    public final static String CACHENAME = "cache";
+       
+    public String getProviderURI(){
+        return "content://"+getContext().getPackageName();
+    }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
 
         File f;
-        if ((f = new File(getContext().getFilesDir()+uri.getPath())).exists())
+        if ((f = new File(getContext().getFilesDir(),uri.getPath())).exists())
         {
-            Log.d(getContext().getString(R.string.app_name),"DELETE FILE FROM PROVIDER URI="+uri.toString()+" FILE="+f.getAbsolutePath());
+            Log.d("cordova-plugin-openfile","DELETE FILE FROM PROVIDER URI="+uri.toString()+" FILE="+f.getAbsolutePath());
             f.delete();
             return 1;
         }
         else
-        if ((f = new File(getContext().getExternalStorageDirectory()+uri.getPath())).exists())
+        if ((f = new File(Environment.getExternalStorageDirectory(),uri.getPath())).exists())
         {
-            Log.d(getContext().getString(R.string.app_name),"DELETE FILE FROM PROVIDER URI="+uri.toString()+" FILE="+f.getAbsolutePath());
+            Log.d("cordova-plugin-openfile","DELETE FILE FROM PROVIDER URI="+uri.toString()+" FILE="+f.getAbsolutePath());
             f.delete();
             return 1;
         }
         else
-        if ((f = new File(getContext().getExternalFilesDir(null)+uri.getPath())).exists())
+        if ((f = new File(getContext().getExternalFilesDir(null),uri.getPath())).exists())
         {
-            Log.d(getContext().getString(R.string.app_name),"DELETE FILE FROM PROVIDER URI="+uri.toString()+" FILE="+f.getAbsolutePath());
+            Log.d("cordova-plugin-openfile","DELETE FILE FROM PROVIDER URI="+uri.toString()+" FILE="+f.getAbsolutePath());
             f.delete();
             return 1;
         }
@@ -65,18 +66,18 @@ public class OpenfileProvider extends FileProvider {
             fname = new File(getContext().getExternalFilesDir(null),uristr);
         }
         else
-        if (uristr.contains(PROVIDER_URI+".openfile.provider/internal/")) {
-            uristr = uristr.replace(PROVIDER_URI+".openfile.provider/internal/", "");
+        if (uristr.contains(getProviderURI()+".openfile.provider/internal/")) {
+            uristr = uristr.replace(getProviderURI()+".openfile.provider/internal/", "");
             fname = new File(getContext().getFilesDir(),"files/"+uristr);
         }
         else
-        if (uristr.contains(PROVIDER_URI+".openfile.provider/external/")) {
-            uristr = uristr.replace(PROVIDER_URI+".openfile.provider/external/", "");
+        if (uristr.contains(getProviderURI()+".openfile.provider/external/")) {
+            uristr = uristr.replace(getProviderURI()+".openfile.provider/external/", "");
             fname = new File(Environment.getExternalStorageDirectory(),uristr);
         }
         else
-        if (uristr.contains(PROVIDER_URI+".openfile.provider/external2/")) {
-            uristr = uristr.replace(PROVIDER_URI+".openfile.provider/external2/", "");
+        if (uristr.contains(getProviderURI()+".openfile.provider/external2/")) {
+            uristr = uristr.replace(getProviderURI()+".openfile.provider/external2/", "");
             fname = new File(getContext().getExternalFilesDir(null),uristr);
         }
 
