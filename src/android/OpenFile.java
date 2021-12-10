@@ -26,24 +26,7 @@ public class OpenFile extends CordovaPlugin {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
 
-        File ffile = new File(file);
-
-        Uri uri = null;
-		String applicationId = (String) org.apache.cordova.BuildHelper.getBuildConfigValue(cordova.getActivity(), "APPLICATION_ID");
-        try {
-            uri = OpenfileProvider.getUriForFile(context, applicationId+".openfile.provider", ffile);
-        }
-        catch (Exception e)
-        {
-            try {
-                uri = OpenfileProvider.getUriForFile(context, applicationId+".openfile.provider", new File(context.getFilesDir(),file));
-            }
-            catch (Exception e1)
-            {
-
-            }
-        }
-
+        Uri uri = getUri(context,file);
         android.content.ContentResolver  cR = context.getContentResolver();
         String mime = cR.getType(uri);
 
@@ -61,6 +44,29 @@ public class OpenFile extends CordovaPlugin {
         }
     }
 
+    public Uri getUri(Context context, String file)
+    {
+        File ffile = new File(file);
+
+        Uri uri = null;
+        String applicationId = (String) org.apache.cordova.BuildHelper.getBuildConfigValue(cordova.getActivity(), "APPLICATION_ID");
+        try {
+            uri = OpenfileProvider.getUriForFile(context, applicationId+".openfile.provider", ffile);
+        }
+        catch (Exception e)
+        {
+            try {
+                uri = OpenfileProvider.getUriForFile(context, applicationId+".openfile.provider", new File(context.getFilesDir(),file));
+            }
+            catch (Exception e1)
+            {
+                return null;
+            }
+        }
+
+        return uri;
+    }
+
     @Override
     public boolean execute(String action, JSONArray data, CallbackContext callbackContext) throws JSONException {
 
@@ -68,7 +74,16 @@ public class OpenFile extends CordovaPlugin {
         {
             this.openNewActivity(cordova.getActivity(),data.getString(0),callbackContext);
             return true;
-        } else {
+        }
+        else
+        if (action.equals("getUriForFile"))
+        {
+            Uri uri = getUri(cordova.getActivity(),data.getString(0));
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, uri.toString()));
+            return true;
+        }
+        else
+		{
             callbackContext.error("Method not found");
             return false;
         }
